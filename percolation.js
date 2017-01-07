@@ -1,5 +1,4 @@
 // public class Percolation {
-//    public Percolation(int n)                // create n-by-n grid, with all sites blocked
 //    public    void open(int row, int col)    // open site (row, col) if it is not open already
 //    public boolean isOpen(int row, int col)  // is site (row, col) open?
 //    public boolean isFull(int row, int col)  // is site (row, col) full?
@@ -22,12 +21,14 @@ const Percolation = function (n) {
 	// }
 
 	//Init the id array
+	// this.id = [0,1,2,3,4,5,6,7,8,9]; //Testing only
 	this.id = [];
 	for (var i = 0; i < n*n; i++) {
 		this.id[i] = i;
 	}
 
 	//Init the size array
+	// this.size = new Array(10).fill(1); //Testing only
 	this.size = new Array(n*n).fill(1);
 
 	this.findRoot = function(index) {
@@ -37,18 +38,53 @@ const Percolation = function (n) {
 		return index;
 	}
 
-	this.convert2dto1d = function(x,y) {
+	this.convert2dto1d = function(x, y) {
 		if (x < 0 || x >= n || y < 0 || y >= n){
 			throw new Error('Coordinates out of bounds')
 		}
 
 		return x * n + y;
 	}
-	this.printBoard = function () {
-		console.log(this.id)
+
+	this.addUnion = function(x, y) {
+		const yRoot = this.findRoot(y);
+		const xRoot = this.findRoot(x);
+
+		if (yRoot === xRoot) {return false;}
+
+		if (this.size[xRoot] < this.size[yRoot]) {
+			this.id[xRoot] = yRoot;
+			this.size[yRoot] += this.size[xRoot];
+		} else {
+			this.id[yRoot] = xRoot;
+			this.size[xRoot] += this.size[yRoot];
+		}
+		return this.id;
+	}
+
+	this.isJoined = function (x, y) {
+		const yRoot = this.findRoot(y);
+		const xRoot = this.findRoot(x);
+
+		return yRoot === xRoot;
 	}
 }
 
 const t = new Percolation(3)
-// console.log(t.convert2dto1d(1,2))
-console.log('Root of 5:', t.findRoot(5))
+// console.log(t.addUnion(4,3).toString() === ([ 0, 1, 2, 4, 4, 5, 6, 7, 8, 9 ]).toString())
+// console.log(t.addUnion(3,8).toString() === ([ 0, 1, 2, 4, 4, 5, 6, 7, 4, 9 ]).toString())
+// console.log(t.addUnion(6,5).toString() === ([ 0, 1, 2, 4, 4, 6, 6, 7, 4, 9 ]).toString())
+// console.log(t.addUnion(9,4).toString() === ([ 0, 1, 2, 4, 4, 6, 6, 7, 4, 4 ]).toString())
+// console.log(t.addUnion(2,1).toString() === ([ 0, 2, 2, 4, 4, 6, 6, 7, 4, 4 ]).toString())
+// console.log(t.addUnion(5,0).toString() === ([ 6, 2, 2, 4, 4, 6, 6, 7, 4, 4 ]).toString())
+// console.log(t.addUnion(7,2).toString() === ([ 6, 2, 2, 4, 4, 6, 6, 2, 4, 4 ]).toString())
+// console.log(t.addUnion(6,1).toString() === ([ 6, 2, 6, 4, 4, 6, 6, 2, 4, 4 ]).toString())
+// console.log(t.addUnion(7,3).toString() === ([ 6, 2, 6, 4, 6, 6, 6, 2, 4, 4 ]).toString())
+
+
+
+// t.addUnion(1,2)
+// t.addUnion(0,1)
+// t.addUnion(0,1)
+// t.addUnion(0,1)
+// t.addUnion(0,1)
