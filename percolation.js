@@ -37,7 +37,7 @@ const Percolation = function (n) {
 
 		this.sites.board[randomIndex] = 1;
 		this.sites.open += 1;
-
+		console.log('randomIndex', randomIndex)
 		//Look up, down, left and right and call addUnion
 		const inboundsOptions = this.getInboundsOptions(randomIndex);
 
@@ -45,8 +45,8 @@ const Percolation = function (n) {
 			this.addUnion(randomIndex, inboundsOptions[i])
 		}
 
-		console.log(this.sites.board)
-		console.log(this.id)
+		console.log('Board', this.sites.board)
+		console.log('ID', this.id)
 		
 	}
 
@@ -64,23 +64,28 @@ const Percolation = function (n) {
 		const row = Math.floor(start / n);
 		const col = start % n;
 
-		if (row > 0) {
-			const up = (row - 1) * n + col
+		const up = (row - 1) * n + col
+		const down = (row + 1) * n + col
+		const left = start - 1;
+		const right = start + 1
+		
+		if (row > 0 && !this.isJoined(up, start) && this.sites.board[up] === 1) {
+			console.log(start, ' joining with ', up)
 			openings.push(up)
 		}
 
-		if (row < (n - 1)) {
-			const down = (row + 1) * n + col
+		if (row < (n - 1) && !this.isJoined(down, start) && this.sites.board[down] === 1) {
+			console.log(start, ' joining with ', down)
 			openings.push(down)
 		}
 
-		if (col > 0) {
-			const left = start - 1;
+		if (col > 0 && !this.isJoined(left, start) && this.sites.board[left] === 1) {
+			console.log(start, ' joining with ', left)
 			openings.push(left)
 		}
 
-		if (col < (n - 1)) {
-			const right = start + 1
+		if (col < (n - 1) && !this.isJoined(right, start) && this.sites.board[right] === 1) {
+			console.log(start, ' joining with ', right)
 			openings.push(right)
 		}
 		return openings
@@ -113,7 +118,7 @@ const Percolation = function (n) {
 	this.isJoined = function (x, y) {
 		const yRoot = this.findRoot(y);
 		const xRoot = this.findRoot(x);
-
+		// console.log('isJoined', x, y, xRoot, yRoot)
 		return yRoot === xRoot;
 	}
 }
@@ -129,9 +134,11 @@ const t = new Percolation(3)
 // t.openRandom();
 // t.openRandom();
 // t.getInboundsOptions(4)
+t.openRandom();
+t.openRandom();
+t.openRandom();
 // t.openRandom();
-// t.openRandom();
-// t.openRandom();
+
 // console.log(t.addUnion(4,3).toString() === ([ 0, 1, 2, 4, 4, 5, 6, 7, 8, 9 ]).toString())
 // console.log(t.addUnion(3,8).toString() === ([ 0, 1, 2, 4, 4, 5, 6, 7, 4, 9 ]).toString())
 // console.log(t.addUnion(6,5).toString() === ([ 0, 1, 2, 4, 4, 6, 6, 7, 4, 9 ]).toString())
