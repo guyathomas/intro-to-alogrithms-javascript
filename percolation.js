@@ -23,6 +23,21 @@ const Percolation = function (n) {
 		total: n*n
 	}
 	this.sites.board = new Array(n*n).fill(0);
+	
+	let topIndex = this.id.length
+	this.id.push(topIndex)
+	let bottomIndex = this.id.length
+	this.id.push(bottomIndex)
+
+	for (var i = 0; i < n; i++) {
+		this.id[i] = topIndex;
+	}
+
+	for (var i = n*n - 1; i > n*n - n -1; i--) {
+		this.id[i] = bottomIndex;
+	}
+
+	console.log(this.id)
 
 	/*==== Functionality ====*/
 	this.openRandom = function() {
@@ -121,38 +136,16 @@ const Percolation = function (n) {
 		// console.log('isJoined', x, y, xRoot, yRoot)
 		return yRoot === xRoot;
 	}
+
+	this.doesPerculate = function () {
+		return this.isJoined(topIndex, bottomIndex)
+	}
 }
 
 const t = new Percolation(3)
 // t.openRandom();
+// this.doesPerculate
 // t.openRandom();
+// this.doesPerculate
 // t.openRandom();
-// t.openRandom();
-// t.openRandom();
-// t.openRandom();
-// t.openRandom();
-// t.openRandom();
-// t.openRandom();
-// t.getInboundsOptions(4)
-t.openRandom();
-t.openRandom();
-t.openRandom();
-// t.openRandom();
-
-// console.log(t.addUnion(4,3).toString() === ([ 0, 1, 2, 4, 4, 5, 6, 7, 8, 9 ]).toString())
-// console.log(t.addUnion(3,8).toString() === ([ 0, 1, 2, 4, 4, 5, 6, 7, 4, 9 ]).toString())
-// console.log(t.addUnion(6,5).toString() === ([ 0, 1, 2, 4, 4, 6, 6, 7, 4, 9 ]).toString())
-// console.log(t.addUnion(9,4).toString() === ([ 0, 1, 2, 4, 4, 6, 6, 7, 4, 4 ]).toString())
-// console.log(t.addUnion(2,1).toString() === ([ 0, 2, 2, 4, 4, 6, 6, 7, 4, 4 ]).toString())
-// console.log(t.addUnion(5,0).toString() === ([ 6, 2, 2, 4, 4, 6, 6, 7, 4, 4 ]).toString())
-// console.log(t.addUnion(7,2).toString() === ([ 6, 2, 2, 4, 4, 6, 6, 2, 4, 4 ]).toString())
-// console.log(t.addUnion(6,1).toString() === ([ 6, 2, 6, 4, 4, 6, 6, 2, 4, 4 ]).toString())
-// console.log(t.addUnion(7,3).toString() === ([ 6, 2, 6, 4, 6, 6, 6, 2, 4, 4 ]).toString())
-
-
-
-// t.addUnion(1,2)
-// t.addUnion(0,1)
-// t.addUnion(0,1)
-// t.addUnion(0,1)
-// t.addUnion(0,1)
+// this.doesPerculate
