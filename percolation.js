@@ -39,12 +39,15 @@ const Percolation = function (n) {
 		this.sites.open += 1;
 
 		//Look up, down, left and right and call addUnion
-		
-		// console.log(this.sites.board.reduce((acc, val, i) => { //For testing
-		// 	return acc += val;
-		// }, 0)) 
+		const inboundsOptions = this.getInboundsOptions(randomIndex);
 
-		console.log(this.sites.board, this.sites.open)
+		for (var i = 0; i < inboundsOptions.length; i++) {
+			this.addUnion(randomIndex, inboundsOptions[i])
+		}
+
+		console.log(this.sites.board)
+		console.log(this.id)
+		
 	}
 
 	this.findRoot = function(index) {
@@ -64,25 +67,21 @@ const Percolation = function (n) {
 		if (row > 0) {
 			const up = (row - 1) * n + col
 			openings.push(up)
-			console.log('Up')
 		}
 
 		if (row < (n - 1)) {
 			const down = (row + 1) * n + col
 			openings.push(down)
-			console.log('Down')
 		}
 
 		if (col > 0) {
 			const left = start - 1;
 			openings.push(left)
-			console.log('Left')
 		}
 
 		if (col < (n - 1)) {
 			const right = start + 1
 			openings.push(right)
-			console.log('Right')
 		}
 		return openings
 	}
@@ -120,16 +119,18 @@ const Percolation = function (n) {
 }
 
 const t = new Percolation(3)
-t.openRandom();
-t.openRandom();
-t.openRandom();
-t.openRandom();
-t.openRandom();
-t.openRandom();
-t.openRandom();
-t.openRandom();
-t.openRandom();
-t.getInboundsOptions(4)
+// t.openRandom();
+// t.openRandom();
+// t.openRandom();
+// t.openRandom();
+// t.openRandom();
+// t.openRandom();
+// t.openRandom();
+// t.openRandom();
+// t.openRandom();
+// t.getInboundsOptions(4)
+// t.openRandom();
+// t.openRandom();
 // t.openRandom();
 // console.log(t.addUnion(4,3).toString() === ([ 0, 1, 2, 4, 4, 5, 6, 7, 8, 9 ]).toString())
 // console.log(t.addUnion(3,8).toString() === ([ 0, 1, 2, 4, 4, 5, 6, 7, 4, 9 ]).toString())
