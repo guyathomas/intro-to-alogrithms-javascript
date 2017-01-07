@@ -30,6 +30,32 @@ const Percolation = function (n) {
 	//Init the size array
 	// this.size = new Array(10).fill(1); //Testing only
 	this.size = new Array(n*n).fill(1);
+	this.sites = {
+		board: [],
+		open: 0,
+		total: n*n
+	}
+	this.sites.board = new Array(n*n).fill(0);
+
+	this.openRandom = function() {
+		if (this.sites.open === this.sites.total) {
+			throw new Error('All sites already open')
+		}
+
+		let randomIndex = Math.floor(Math.random() * this.sites.total);
+		while (this.sites.board[randomIndex] != 0) {
+			randomIndex = Math.floor(Math.random() * this.sites.total);
+		}
+
+		this.sites.board[randomIndex] = 1;
+		this.sites.open += 1;
+		
+		// console.log(this.sites.board.reduce((acc, val, i) => { //For testing
+		// 	return acc += val;
+		// }, 0)) 
+
+		console.log(this.sites.board, this.sites.open)
+	}
 
 	this.findRoot = function(index) {
 		while (index != this.id[index]) {
@@ -71,6 +97,16 @@ const Percolation = function (n) {
 }
 
 const t = new Percolation(3)
+t.openRandom();
+t.openRandom();
+t.openRandom();
+t.openRandom();
+t.openRandom();
+t.openRandom();
+t.openRandom();
+t.openRandom();
+t.openRandom();
+// t.openRandom();
 // console.log(t.addUnion(4,3).toString() === ([ 0, 1, 2, 4, 4, 5, 6, 7, 8, 9 ]).toString())
 // console.log(t.addUnion(3,8).toString() === ([ 0, 1, 2, 4, 4, 5, 6, 7, 4, 9 ]).toString())
 // console.log(t.addUnion(6,5).toString() === ([ 0, 1, 2, 4, 4, 6, 6, 7, 4, 9 ]).toString())
