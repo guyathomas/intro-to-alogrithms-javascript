@@ -1,13 +1,5 @@
-// public class Percolation {
-//    public    void open(int row, int col)    // open site (row, col) if it is not open already
-//    public boolean isOpen(int row, int col)  // is site (row, col) open?
-//    public boolean isFull(int row, int col)  // is site (row, col) full?
-//    public     int numberOfOpenSites()       // number of open sites
-//    public boolean percolates()              // does the system percolate?
-
-//    public static void main(String[] args)   // test client (optional)
-// }
-
+// Programming Assignment 1: Percolation
+// http://coursera.cs.princeton.edu/algs4/assignments/percolation.html
 const Percolation = function (n) {
 
 	/*==== Initialisation ====*/
@@ -22,8 +14,10 @@ const Percolation = function (n) {
 		open: 0,
 		total: n*n
 	}
-	this.sites.board = new Array(n*n).fill(0);
+	this.sites.board = new Array(n*n).fill(0); //Keep track of open points
 	
+	//Create (and link) a top and bottom node 
+	//that will be connected to the top and bottom row to check Percolation
 	let topIndex = this.id.length
 	this.id.push(topIndex)
 	let bottomIndex = this.id.length
@@ -44,6 +38,7 @@ const Percolation = function (n) {
 			throw new Error('All sites already open')
 		}
 
+		//Find a random (but closed) site
 		let randomIndex = Math.floor(Math.random() * this.sites.total);
 		while (this.sites.board[randomIndex] != 0) {
 			randomIndex = Math.floor(Math.random() * this.sites.total);
@@ -51,7 +46,7 @@ const Percolation = function (n) {
 
 		this.sites.board[randomIndex] = 1;
 		this.sites.open += 1;
-		console.log('randomIndex', randomIndex)
+
 		const inboundsOptions = this.getInboundsOptions(randomIndex);
 
 		for (var i = 0; i < inboundsOptions.length; i++) {
@@ -67,45 +62,40 @@ const Percolation = function (n) {
 	}
 
 	this.getInboundsOptions = function (start) {
+		//Find the locations of the points that are 
+			//in bounds
+			//are not already joined to the starting point
+			//are opened (water can flow through)
 		if (start < 0 || start >= n*n) {throw new Error('Input provided is out of bounds')}
-		
 		let openings = [];
+
+		//Convert array index into a row / column format
 		const row = Math.floor(start / n);
 		const col = start % n;
 
+		//Find the array index version of all the directions
 		const up = (row - 1) * n + col
 		const down = (row + 1) * n + col
 		const left = start - 1;
 		const right = start + 1
 		
+		//Push index to results array if it is valid
 		if (row > 0 && !this.isJoined(up, start) && this.sites.board[up] === 1) {
-			// console.log(start, ' joining with ', up)
 			openings.push(up)
 		}
 
 		if (row < (n - 1) && !this.isJoined(down, start) && this.sites.board[down] === 1) {
-			// console.log(start, ' joining with ', down)
 			openings.push(down)
 		}
 
 		if (col > 0 && !this.isJoined(left, start) && this.sites.board[left] === 1) {
-			// console.log(start, ' joining with ', left)
 			openings.push(left)
 		}
 
 		if (col < (n - 1) && !this.isJoined(right, start) && this.sites.board[right] === 1) {
-			// console.log(start, ' joining with ', right)
 			openings.push(right)
 		}
 		return openings
-	}
-
-	this.convert2dto1d = function(x, y) {
-		if (x < 0 || x >= n || y < 0 || y >= n){
-			return false;
-		} else {
-			return x * n + y;
-		}
 	}
 
 	this.addUnion = function(x, y) {
@@ -114,6 +104,7 @@ const Percolation = function (n) {
 
 		if (yRoot === xRoot) {return false;}
 
+		//Add the smaller tree to be a parent of the larger one
 		if (this.size[xRoot] < this.size[yRoot]) {
 			this.id[xRoot] = yRoot;
 			this.size[yRoot] += this.size[xRoot];
@@ -127,7 +118,7 @@ const Percolation = function (n) {
 	this.isJoined = function (x, y) {
 		const yRoot = this.findRoot(y);
 		const xRoot = this.findRoot(x);
-		// console.log('isJoined', x, y, xRoot, yRoot)
+
 		return yRoot === xRoot;
 	}
 
@@ -149,9 +140,7 @@ const runTrials = function(trials, boardSize) {
 	const totalOpenings = results.reduce((acc, val, i) => {
 		return acc + val;
 	})
-	console.log(totalOpenings, boardSize * trials)
-	
 	return totalOpenings / (boardSize * boardSize * trials)
 }
 
-console.log(runTrials(10000, 5))
+console.log(runTrials(1000, 50))
