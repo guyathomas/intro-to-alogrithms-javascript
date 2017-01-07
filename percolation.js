@@ -37,7 +37,6 @@ const Percolation = function (n) {
 		this.id[i] = bottomIndex;
 	}
 
-	console.log(this.id)
 
 	/*==== Functionality ====*/
 	this.openRandom = function() {
@@ -53,16 +52,11 @@ const Percolation = function (n) {
 		this.sites.board[randomIndex] = 1;
 		this.sites.open += 1;
 		console.log('randomIndex', randomIndex)
-		//Look up, down, left and right and call addUnion
 		const inboundsOptions = this.getInboundsOptions(randomIndex);
 
 		for (var i = 0; i < inboundsOptions.length; i++) {
 			this.addUnion(randomIndex, inboundsOptions[i])
 		}
-
-		console.log('Board', this.sites.board)
-		console.log('ID', this.id)
-		
 	}
 
 	this.findRoot = function(index) {
@@ -85,22 +79,22 @@ const Percolation = function (n) {
 		const right = start + 1
 		
 		if (row > 0 && !this.isJoined(up, start) && this.sites.board[up] === 1) {
-			console.log(start, ' joining with ', up)
+			// console.log(start, ' joining with ', up)
 			openings.push(up)
 		}
 
 		if (row < (n - 1) && !this.isJoined(down, start) && this.sites.board[down] === 1) {
-			console.log(start, ' joining with ', down)
+			// console.log(start, ' joining with ', down)
 			openings.push(down)
 		}
 
 		if (col > 0 && !this.isJoined(left, start) && this.sites.board[left] === 1) {
-			console.log(start, ' joining with ', left)
+			// console.log(start, ' joining with ', left)
 			openings.push(left)
 		}
 
 		if (col < (n - 1) && !this.isJoined(right, start) && this.sites.board[right] === 1) {
-			console.log(start, ' joining with ', right)
+			// console.log(start, ' joining with ', right)
 			openings.push(right)
 		}
 		return openings
@@ -142,10 +136,22 @@ const Percolation = function (n) {
 	}
 }
 
-const t = new Percolation(3)
-// t.openRandom();
-// this.doesPerculate
-// t.openRandom();
-// this.doesPerculate
-// t.openRandom();
-// this.doesPerculate
+const runTrials = function(trials, boardSize) {
+	const results = [];
+	for (var i = 0; i < trials; i++) {
+		let trial = new Percolation(boardSize)
+		while (!trial.doesPerculate()) {
+			trial.openRandom();
+		}
+		results.push(trial.sites.open)
+	}
+
+	const totalOpenings = results.reduce((acc, val, i) => {
+		return acc + val;
+	})
+	console.log(totalOpenings, boardSize * trials)
+	
+	return totalOpenings / (boardSize * boardSize * trials)
+}
+
+console.log(runTrials(10000, 5))
