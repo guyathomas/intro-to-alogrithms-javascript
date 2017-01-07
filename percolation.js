@@ -9,26 +9,13 @@
 // }
 
 const Percolation = function (n) {
-	// this.row = new Array(n).fill(1)
-	// this.board = new Array(n).fill(this.row)
-	// this.printBoard = function() {
-	// 	console.log(this.board)
-	// }
-	// this.sites = {
-	// 	total: n * n,
-	// 	open: 0,
-	// 	closed: n * n
-	// }
 
-	//Init the id array
-	// this.id = [0,1,2,3,4,5,6,7,8,9]; //Testing only
+	/*==== Initialisation ====*/
 	this.id = [];
 	for (var i = 0; i < n*n; i++) {
 		this.id[i] = i;
 	}
 
-	//Init the size array
-	// this.size = new Array(10).fill(1); //Testing only
 	this.size = new Array(n*n).fill(1);
 	this.sites = {
 		board: [],
@@ -37,6 +24,7 @@ const Percolation = function (n) {
 	}
 	this.sites.board = new Array(n*n).fill(0);
 
+	/*==== Functionality ====*/
 	this.openRandom = function() {
 		if (this.sites.open === this.sites.total) {
 			throw new Error('All sites already open')
@@ -49,6 +37,8 @@ const Percolation = function (n) {
 
 		this.sites.board[randomIndex] = 1;
 		this.sites.open += 1;
+
+		//Look up, down, left and right and call addUnion
 		
 		// console.log(this.sites.board.reduce((acc, val, i) => { //For testing
 		// 	return acc += val;
@@ -64,12 +54,45 @@ const Percolation = function (n) {
 		return index;
 	}
 
-	this.convert2dto1d = function(x, y) {
-		if (x < 0 || x >= n || y < 0 || y >= n){
-			throw new Error('Coordinates out of bounds')
+	this.getInboundsOptions = function (start) {
+		if (start < 0 || start >= n*n) {throw new Error('Input provided is out of bounds')}
+		
+		let openings = [];
+		const row = Math.floor(start / n);
+		const col = start % n;
+
+		if (row > 0) {
+			const up = (row - 1) * n + col
+			openings.push(up)
+			console.log('Up')
 		}
 
-		return x * n + y;
+		if (row < (n - 1)) {
+			const down = (row + 1) * n + col
+			openings.push(down)
+			console.log('Down')
+		}
+
+		if (col > 0) {
+			const left = start - 1;
+			openings.push(left)
+			console.log('Left')
+		}
+
+		if (col < (n - 1)) {
+			const right = start + 1
+			openings.push(right)
+			console.log('Right')
+		}
+		return openings
+	}
+
+	this.convert2dto1d = function(x, y) {
+		if (x < 0 || x >= n || y < 0 || y >= n){
+			return false;
+		} else {
+			return x * n + y;
+		}
 	}
 
 	this.addUnion = function(x, y) {
@@ -106,6 +129,7 @@ t.openRandom();
 t.openRandom();
 t.openRandom();
 t.openRandom();
+t.getInboundsOptions(4)
 // t.openRandom();
 // console.log(t.addUnion(4,3).toString() === ([ 0, 1, 2, 4, 4, 5, 6, 7, 8, 9 ]).toString())
 // console.log(t.addUnion(3,8).toString() === ([ 0, 1, 2, 4, 4, 5, 6, 7, 4, 9 ]).toString())
